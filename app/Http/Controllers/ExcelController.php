@@ -20,7 +20,7 @@ class ExcelController extends Controller
 {
     // Validate the uploaded file
     $request->validate([
-        'file' => 'required|mimes:xlsx',
+        'file' => 'required|mimes:xlsx,xls',
     ]);
 
     // Generate a unique table
