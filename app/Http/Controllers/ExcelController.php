@@ -23,10 +23,8 @@ class ExcelController extends Controller
             'file' => 'required|mimes:xlsx,xls',
         ]);
     
-        // Generate a unique table
         $tableName = 'dynamic_table_' . now()->format('YmdHis');
     
-        // Store the uploaded file
         $file = $request->file('file');
         $filePath = Storage::putFile('uploads', $file);
     
@@ -38,18 +36,14 @@ class ExcelController extends Controller
         });
     
         if (empty($dataRows)) {
-            // Handle the case where there is no data to import
             return redirect()->back()->with('error', 'No data found in the uploaded Excel file.');
         }
     
-        // Get the first row as headers
         $headers = $data[0][0];
     
-        // Filter out empty headers
         $nonEmptyHeaders = array_filter($headers, 'strlen');
     
         if (empty($nonEmptyHeaders)) {
-            // Handle the case where all headers are empty
             return redirect()->back()->with('error', 'No valid column headers found in the uploaded Excel file.');
         }
     
@@ -70,7 +64,6 @@ class ExcelController extends Controller
         });
     
         foreach ($dataRows as $row) {
-            // Filter out empty cells in the row
             $nonEmptyRow = array_filter($row, 'strlen');
             DB::table($tableName)->insert(array_combine($validatedHeaders, $nonEmptyRow));
         }
